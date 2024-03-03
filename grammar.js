@@ -19,6 +19,16 @@ module.exports = grammar(C, {
             $.preproc_extension,
         ),
 
+        preproc_extension: $ => seq(
+          field('directive', $.preproc_directive),
+          field('extension', $.identifier),
+          token.immediate(/[ \t]*:[ \t]*/),
+          field('behavior', $.extension_behavior),
+          token.immediate(/\r?\n/),
+        ),
+
+        extension_behavior: $ => choice("require", "enable", "warn", "disable"),
+
         function_definition: ($, original) => seq(
             optional(
                 seq(
